@@ -1,7 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import { io } from "socket.io-client";
+import logo from "./logo.svg";
+import "./App.css";
 
+let socket = io('http://localhost:3000')
 function App() {
+  React.useEffect(() => {
+    socket.on("connect", function () {
+      socket.emit("echo", { data: "I'm connected!" });
+    });
+  
+  });
+
+ 
   return (
     <div className="App">
       <header className="App-header">
@@ -15,6 +26,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
+          <button onClick={() => socket.em}></button>
           Learn React
         </a>
       </header>
