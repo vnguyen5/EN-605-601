@@ -2,36 +2,34 @@ import * as React from "react";
 import { io } from "socket.io-client";
 import logo from "./logo.svg";
 import "./App.css";
+import { WebSocketDemo } from "./components/WebSocketDemo";
+import "bootstrap/dist/css/bootstrap.min.css";
+import useWebSocket, { ReadyState } from "react-use-websocket";
+const socketUrl = "ws://localhost:6789";
 
-let socket = io('http://localhost:3000')
 function App() {
-  React.useEffect(() => {
-    socket.on("connect", function () {
-      socket.emit("echo", { data: "I'm connected!" });
-    });
-  
+  const [messages, setMessages] = React.useState([]);
+
+  const {
+    sendMessage,
+    sendJsonMessage,
+    lastMessage,
+    lastJsonMessage,
+    readyState,
+    getWebSocket,
+  } = useWebSocket(socketUrl, {
+    onOpen: () => console.log("opened"),
+    //Will attempt to reconnect on all close events, such as server shutting down
+    shouldReconnect: (closeEvent) => true,
+    onMessage: (event) => {
+      console.log(event.data);
+      const tempMessages = messages;
+      messages.push(event.data);
+      setMessages(tempMessages);
+    },
   });
 
- 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <button onClick={() => socket.em}></button>
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return <WebSocketDemo messages={messages}/>;
 }
 
 export default App;
