@@ -19,7 +19,13 @@ def state_event():
 
 
 def users_event():
-    return json.dumps({"type": "users", "count": len(USERS)})
+    totalUsers = str(len(USERS))
+    return json.dumps({"type": "users", "count": len(USERS), "message": "User Added to game. " + totalUsers + " total User(s)"})
+
+
+async def notify_message(message):
+    if USERS:  # asyncio.wait doesn't accept an empty list
+        await asyncio.wait([user.send(message) for user in USERS])
 
 
 async def notify_state():
@@ -50,16 +56,17 @@ async def messages(websocket, path):
     try:
         await websocket.send(state_event())
         async for message in websocket:
-            print(message)
             data = json.loads(message)
-            if data["action"] == "minus":
+            action = data["action"]
+            if action == "minus":
                 STATE["value"] -= 1
                 await notify_state()
-            elif data["action"] == "plus":
+            elif action == "plus":
                 STATE["value"] += 1
                 await notify_state()
             else:
-                logging.error("unsupported event: {}", data)
+                print("unsupported event: ", data)
+                await notify_message(message)
     finally:
         # print(error)
         await unregister(websocket)
