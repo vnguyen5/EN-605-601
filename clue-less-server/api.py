@@ -19,7 +19,7 @@ def state_event():
 
 
 def users_event():
-    totalUsers = str(len(USERS))
+    totalUsers = str(len(USERS) - 1)
     return json.dumps({"type": "users", "count": len(USERS), "message": "User Added to game. " + totalUsers + " total User(s)"})
 
 
