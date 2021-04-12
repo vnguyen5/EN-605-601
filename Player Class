@@ -1,0 +1,102 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr 11 12:37:18 2021
+
+@author: M50447
+"""
+
+class Player:
+    def __init__(self, name, playerID, playerState, suspectID, cardID, movedLastTurn, hand_lst):
+        self.name = name
+        self.playerID = playerID
+        self.playerState = playerState
+        self.suspectID = suspectID
+        self.cardID = cardID
+        self.movedLastTurn = movedLastTurn
+        self.hand = hand_lst
+        
+    # getters
+    def getName(self):
+        print(self.name)
+        return self.name
+        
+    def getPlayerID(self):
+        print(self.playerID)
+        return self.playerID
+    
+    def getPlayerState(self):
+        print(self.playerState)
+        return self.playerState
+    
+    # you need to specify name or token id when you get the return
+    def getSuspectID(self):
+        return self.suspectID
+    
+    # getters
+    def setName(self, name):
+        self.name = name
+    
+    def setPlayerID(self, playerID):
+        self.playerID = playerID
+        
+    def setPlayerState(self, playerState):
+        self.playerState = playerState
+        
+    # we may need to think about the ownership of suspectID and player positions
+    def setSuspectID(self, suspectToken)
+    
+    
+    
+    # player actions
+    def makeAccusation(self, card1, card2, card3, CaseFile):
+        count = 0
+        if self.getplayerState() != 0:
+            return "You cant make an accusation because you are in a losing state!"
+        else:
+            card_lst = list(card1,card2,card3)
+            for i in card_lst:
+                if i in CaseFile.caseFileCardList:
+                    print("Your card: ", i, " was in the case file)
+                    count = count + 1
+                else:
+                    print("Your card: ", i, "was not in the case file")
+            print('Case File Cards:')
+            for i in CaseFile.caseFileCardList:
+                print(i.name)
+            if count == 3:
+                self.setPlayerState = 1
+                print(self.name, " you are the winner!")
+                ###### how do we end game
+                
+    
+    
+    ############# Added a hand attribute to player, it will be a list of cards
+    def getCards(self):
+        for i in self.hand:
+            print(i.name)
+    
+    def getCard(self, card_index):
+        print(self.hand[card_index].name)
+        return self.hand[card_index]
+        
+    def movePlayer(self, moveposition, GameBoard):
+        if self.getplayerState() != 0:
+            return "You cant move because you are in a losing state!"
+        else:
+            playerPosition = GameBoard.getPlayerPosition(self)
+            if moveposition in GameBoard.getLayoutAdjacencies(playerPosition):
+                GameBoard.setPlayerPosition(self, moveposition)
+                return "Player successfully moved to, ", GameBoard
+            else:
+                return "You cant move because that is an invalid move position"
+            
+        
+    
+    
+    # need to think about this one a little bit
+    def endTurn(self, Gamelog, GameBoard):
+        
+                
+            
+            
+        
