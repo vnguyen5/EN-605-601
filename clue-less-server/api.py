@@ -10,7 +10,7 @@ import websockets
 logging.basicConfig()
 
 STATE = {"value": 0}
-
+PLAYERS = set()
 USERS = set()
 
 
@@ -18,9 +18,19 @@ def state_event():
     return json.dumps({"type": "state", **STATE})
 
 
+def getUsers():
+    return USERS
+
+
 def users_event():
     totalUsers = str(len(USERS) - 1)
     return json.dumps({"type": "users", "count": len(USERS), "message": "User Added to game. " + totalUsers + " total User(s)"})
+
+
+async def notify_user(targetUser, message):
+    for user in USERS:
+        if targetUser == user:
+            await user.send(message)
 
 
 async def notify_message(message):
@@ -42,6 +52,7 @@ async def notify_users():
 
 async def register(websocket):
     USERS.add(websocket)
+    print(websocket)
     await notify_users()
 
 
@@ -56,14 +67,15 @@ async def messages(websocket, path):
     try:
         await websocket.send(state_event())
         async for message in websocket:
+            # check if message's originating player is current players turn
             data = json.loads(message)
             action = data["action"]
-            if action == "minus":
-                STATE["value"] -= 1
-                await notify_state()
-            elif action == "plus":
-                STATE["value"] += 1
-                await notify_state()
+           
+            if action == 'move':
+                PLAYERS[0].movePlayer()
+            elif action == 'endTurn':
+                # increment currentPLayerturncounter
+                break
             else:
                 print("unsupported event: ", data)
                 await notify_message(message)

@@ -79,6 +79,15 @@ export const ClueLessWrapper = () => {
     sendMessageWrapper(quitMessage);
     window.close();
   };
+
+  const sendEndTurnMessage = () => {
+    const quitMessage: MessageInterface = {
+      message: "Player Quits",
+      type: "user",
+      action: "endTurn",
+    };
+    sendMessageWrapper(quitMessage);
+  };
   return (
     <Clueless
       messages={messages}
