@@ -41,30 +41,42 @@ export const ClueLessWrapper = () => {
     sendMessageWrapper(startMessage);
   };
 
-  const sendOnMoveMessage = () => {
+  const sendOnMoveMessage = (roomNumber = -1) => {
     const moveMessage: MessageInterface = {
       message: "Player Moved",
       type: "state",
       action: "move",
+      roomNumber
     };
 
     sendMessageWrapper(moveMessage);
   };
 
   const sendOnMakeSuggestionMessage = () => {
+    const weapon = prompt("Enter Weapon") || "";
+    const suspect = prompt("Enter Suspect") || "";
+
     const suggestionMessage: MessageInterface = {
       message: "Player Made Suggestion",
       type: "state",
       action: "suggest",
+      weapon,
+      suspect,
     };
     sendMessageWrapper(suggestionMessage);
   };
 
   const sendOnAccuseMessage = () => {
+    const weapon = prompt("Enter Weapon") || "";
+    const suspect = prompt("Enter Suspect") || "";
+    const room = prompt("Enter room") || "";
     const accuseMessage: MessageInterface = {
       message: "Player Made Accusation",
       type: "state",
       action: "accuse",
+      weapon,
+      suspect,
+      room,
     };
 
     sendMessageWrapper(accuseMessage);
